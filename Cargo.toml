@@ -1,0 +1,9 @@
+[package]
+name = "llvm_demo"
+version = "0.1.0"
+authors = ["Harumichi Yokoyama <harumichi.yokoyama@icloud.com>"]
+edition = "2018"
+
+[dependencies]
+llvm-sys = "60.0.3"
+libc = "0.2.56"
