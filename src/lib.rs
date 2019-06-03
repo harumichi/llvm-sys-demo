@@ -3,12 +3,11 @@ extern crate libc;
 
 use llvm_sys::core::*;
 use llvm_sys::prelude::*;
+use llvm_sys::bit_reader::*;
 
 use std::os::raw::{c_char};
 use std::ffi::{CString, CStr};
-use libc::{
-    printf,
-};
+
 
 
 pub unsafe fn to_string(ptr: *const c_char) -> &'static str {
@@ -23,7 +22,7 @@ pub unsafe fn use_llvm() {
     let module = LLVMModuleCreateWithNameInContext(b"hoge\0".as_ptr() as *const _, context);
     let builder = LLVMCreateBuilderInContext(context);
     
-        // Write here to build IR
+    // Write here to build IR
     
     LLVMDumpModule(module);
     
@@ -49,11 +48,21 @@ pub unsafe fn get_bitcode() {
         path, &mut membuf as *mut LLVMMemoryBufferRef, &mut msg as *mut *mut c_char
     );
     if ret != 0 {
-        println!("path='{}', msg='{}'", to_string(path), to_string(msg));
-        panic!("LLVMCreateMemoryBufferWithContentsOfFile");
+        println!("LLVMCreateMemoryBufferWithContentsOfFile: {}", to_string(msg));
+        panic!();
     }
 
 
-    
+    let mut module = 0 as LLVMModuleRef;
+    let ret = LLVMParseBitcode(
+        membuf, &mut module as *mut LLVMModuleRef,
+        &mut msg as *mut *mut c_char
+    );
+    if ret != 0 {
+        println!("LLVMParseBitcode: {}", to_string(msg));
+        panic!();
+    }
+    LLVMDisposeMemoryBuffer(membuf);
+
     
 }
