@@ -7,5 +7,5 @@ make
 cd lib
 for f in `ls sleef*.ll`
 do 
-    `llvm-config --bindir`/llc $f -o ${f/ll/bc}
+    `llvm-config --bindir`/llvm-as $f
 done
